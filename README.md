@@ -64,10 +64,6 @@ python3 server.py
 
 Congratulations, you're done! Invite the bot to your personal server and check that it works with `econ help`. 
 
-If you run into setup errors, please contact @hiibolt on Discord.
-
-Do not ask me to 'set up the bot' - if you don't have the experience listed in the prerequisites, I offer access to my personal copy for a set fee.
-
 ## Commands:
 - ### econ list
   Lists all available names you can search for. It's recommended that you use item IDs instead, however.
