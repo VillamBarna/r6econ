@@ -91,7 +91,7 @@ Do not ask me to 'set up the bot' - if you don't have the experience listed in t
 - ### econ profit \<$ purchased for> \<item id>
   Calculates how much you need to sell for to gain profit, and estimates your profit if sold right now (according to the RAP 10x).
 
-- ### econ margin \<$ time id>
+- ### econ margin \<item id>
   Displays a graph of the current state of an item, groups the the orders into to two groups and calculates the average of these groups giving a recommended selling/buying price.
 
 - ### econ help
