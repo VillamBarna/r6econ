@@ -19,7 +19,7 @@ Much of the data this gathers can be used to manipulate the market to your advan
   
 First, clone and navigate to the repo:
 ```
-git clone https://github.com/hiibolt/r6econ.git
+git clone https://github.com/VillamBarna/r6econ.git
 cd r6econ
 ```
 

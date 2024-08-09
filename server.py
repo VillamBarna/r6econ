@@ -239,7 +239,7 @@ async def scan_market():
     with contextlib.suppress(Exception):
         print("[ Opening Session ]")
 
-        auth = Auth("Username", "password")
+        auth = Auth(os.getenv("AUTH_UN"), os.getenv("AUTH_PW"))
 
         print("[ Scanning market... ]")
         item_id_file = open("assets/ids.json", "r")
@@ -288,4 +288,4 @@ async def scan_market():
         print("[ FINISHED WRITING TO 'data.json' ]")
                             
 
-client.run("bot token")
+client.run(os.getenv("BOT_TOKEN"))
