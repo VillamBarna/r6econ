@@ -13,9 +13,10 @@ for weapon_id, weapon_info in data.items():
 	sold_values = weapon_info.get("sold", [])
 	sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 	
-	_, _, _, _, _, _, _, profit, _, _ = analyze_sold_values(sold_values_list)
+	if len(sold_values_list) > 30:
+		low_avg, _, _, _, _, _, _, profit, _, _ = analyze_sold_values(sold_values_list)
 
-	avg_profit[weapon_name] = profit
+		avg_profit[weapon_name] = (profit, low_avg)
 
 with open("avg_profit.json", "w") as file:
 	json.dump(avg_profit, file)

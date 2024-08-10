@@ -90,6 +90,9 @@ Congratulations, you're done! Invite the bot to your personal server and check t
 - ### econ margin \<item id>
   Displays a graph of the current state of an item, groups the the orders into to two groups and calculates the average of these groups giving a recommended selling/buying price.
 
+- ### econ listprofit \<$ max price>
+  Lists the most profitable investments under the given max price.
+
 - ### econ help
  Default message that is shown when an invalid command is used or the user runs `econ help`.
   
