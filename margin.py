@@ -39,7 +39,7 @@ def analyze_sold_values(sold_values):
 
     return low_avg, high_avg, None, None, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
 
-def plot_weapon_sales(sold_values, current_timestamp, asv, item_id):
+def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
     low_avg, high_avg, _, _, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size = asv
     
     # Plot the low group points
@@ -59,7 +59,7 @@ def plot_weapon_sales(sold_values, current_timestamp, asv, item_id):
     
     plt.xlabel('Time ago [hours]')
     plt.ylabel('Sold Value')
-    plt.title(f"Id: {item_id}")
+    plt.title(f"Item name: {item_name}")
     plt.legend()
     plt.grid(True)
     plt.savefig( f"graphs/{item_id}.png" )
