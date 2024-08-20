@@ -1,7 +1,8 @@
 from margin import analyze_sold_values
 import json
+import os
 
-with open("assets/data.json", "r") as file:
+with open(os.path.join(os.path.dirname(__file__), os.pardir, "assets/data.json"), "r") as file:
 	data = json.load(file)
 
 avg_profit = dict()

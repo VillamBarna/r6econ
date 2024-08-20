@@ -1,5 +1,6 @@
 import json
 import time
+import os
 
 def get_sale_frek(id, data):
      weapon_info = data[id]
@@ -7,13 +8,12 @@ def get_sale_frek(id, data):
      sold_values = [x[0] for x in sold_values if\
                (time.time() - x[1])/86400 < 30]
      if len(sold_values) == 0 or weapon_info["data"][5] is None:
-          print(id)
           return None
      return len(sold_values)/weapon_info["data"][5]
 
 
 if __name__ == "__main__":
-     with open('assets/data.json', 'r') as file:
+     with open(os.path.join(os.path.dirname(__file__), os.pardir, "assets/data.json"), "r") as file:
           data = json.load(file)
 
      ids = data.keys()
