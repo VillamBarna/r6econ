@@ -285,13 +285,11 @@ class Auth:
                 else:
                     raise FailedToConnect("Unknown Error")
 
-        print("Done connect")
         if "headers" not in kwargs:
             kwargs["headers"] = {}
 
         authorization = kwargs["headers"].get("Authorization") or "Ubi_v1 t=" + (self.new_key if new else self.key)
         appid = kwargs["headers"].get("Ubi-AppId") or self.appid
-        print("Done auth")
 
 
         kwargs["headers"]["content-type"] = "application/json"
@@ -302,7 +300,6 @@ class Auth:
         kwargs["headers"]["User-Agent"] = kwargs["headers"].get("User-Agent") or "UbiServices_SDK_2020.Release.58_PC64_ansi_static"
         kwargs["headers"]["Connection"] = kwargs["headers"].get("Connection") or "keep-alive"
         kwargs["headers"]["expiration"] = kwargs["headers"].get("expiration") or self.expiration
-        print("Done headers")
 
         query = {
             "operationName":"GetItemDetails",
@@ -317,9 +314,7 @@ class Auth:
         kwargs["data"] = json.dumps(query)
 
         session = await self.get_session()
-        print("Done session")
         resp = await session.post(*args, **kwargs)
-        print("Done post")
 
         if json_:
             try:
@@ -357,7 +352,6 @@ class Auth:
             return data
         else:
             return await resp.text()
-        print("Done response")
     
     async def try_query_db(self):
         await asyncio.sleep(0.08)
