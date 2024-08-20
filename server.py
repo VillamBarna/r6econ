@@ -245,9 +245,9 @@ async def on_message(message):
 						await message.channel.send(embed=embed)
 
 					case _:
-						msg = "The following commands are available:\n\n\t- econ name <item name>\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>"
-						embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
-						await message.channel.send(embed=embed)
+					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>"
+					    embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
+					    await message.channel.send(embed=embed)
 
 
 
