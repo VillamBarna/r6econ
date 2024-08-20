@@ -70,10 +70,6 @@ Congratulations, you're done! Invite the bot to your personal server and check t
   
 
   Lists all tracked skins.
-- ### econ name \<skin name>
-  Fetches the economical trends of an item based on its name in `ids.json`.
-  
-  
 - ### econ id \<item id>
   Functionally the same as the above, but allows the direct lookup by the item's static ID.
 
