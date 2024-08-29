@@ -1,6 +1,6 @@
 import json
 import os
-import margin
+import scripts.margin as margin
 import time
 import discord
 from discord.ext import commands, tasks
