@@ -250,9 +250,7 @@ async def on_message(message):
 									break		
 						embed=discord.Embed(title='Average profit', description=f'{msg}', color=0xFF5733)
 						files = draw(invest_list)
-						for file in files:
-							embed.set_image(url=file.filename)
-						await message.channel.send(embed=embed)
+						await message.channel.send(files=files, embed=embed)
 
 					case _:
 					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ invest <max_price min_percent min_data_points>"
