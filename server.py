@@ -315,7 +315,7 @@ async def scan_market():
 
 @tasks.loop(minutes=60)
 async def avg_profit_json():
-	with open(os.path.join(os.path.dirname(__file__), os.pardir, "assets/data.json"), "r") as file:
+	with open("assets/data.json", "r") as file:
 		data = json.load(file)
 
 	avg_profit = dict()
