@@ -232,8 +232,8 @@ async def on_message(message):
 						with open('avg_profit.json', 'r') as file:
 							data_profit = json.load(file)
 						max_price = float(cmd.pop(0))
-						min_percent = float(cmd.pop(1))
-						min_data_points = float(cmd.pop(2))
+						min_percent = float(cmd.pop(0))
+						min_data_points = float(cmd.pop(0))
 						data_profit = sorted(data_profit.items(), key=lambda x: x[1][0], reverse=True)
 						msg = ""
 						invest_list =[]
