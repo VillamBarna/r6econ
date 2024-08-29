@@ -8,7 +8,7 @@ from discord.ext import commands, tasks
 def draw(invest_list):
 	with open('assets/data.json', 'r') as file:
 		data_margin = json.load(file)
-	for id in len(invest_list):
+	for id in range(len(invest_list)):
 		item_id = invest_list[id]
 		weapon_info = data_margin[item_id]
 		sold_values = weapon_info.get("sold", [])

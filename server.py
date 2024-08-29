@@ -244,7 +244,7 @@ async def on_message(message):
 						for weapon in data_profit:
 							if weapon[1][1] <= max_price and weapon[1][2] > min_data_points and weapon[1][3] > min_percent:
 								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][3]:.0f}\n" 
-								invest_list[item_no] = weapon[4]
+								invest_list.append(weapon[1][4])
 								item_no += 1
 								if ( item_no > 9 ):
 									break		
@@ -328,7 +328,11 @@ async def avg_profit_json():
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 		
 		if len(sold_values_list) > 30:
-			low_avg, _, _, _, _, profit, low_size, high_size = margin.analyze_sold_values(sold_values_list)
+			tmp = margin.analyze_sold_values(sold_values_list)
+			if tmp is None:
+				print(weapon_name)
+				continue
+			low_avg, _, _, _, _, profit, low_size, high_size = tmp 
 
 			avg_profit[weapon_name] = (profit, low_avg, low_size, low_size*100/(low_size+high_size), weapon_id)
 
