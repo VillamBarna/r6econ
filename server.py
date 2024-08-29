@@ -242,7 +242,7 @@ async def on_message(message):
 						invest_list =[]
 						item_no = 0
 						for weapon in data_profit:
-							if weapon[1][1] <= max_price and weapon[1][2] > min_data_points and weapon[1][3] > min_percent:
+							if weapon[1][1] <= max_price and weapon[1][2] > min_data_points and weapon[1][3] > min_data_points and weapon[1][2]*100/(weapon[1][2]+weapon[1][3]) > min_percent:
 								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][3]:.0f}\n" 
 								invest_list.append(weapon[1][4])
 								item_no += 1
@@ -334,7 +334,7 @@ async def avg_profit_json():
 				continue
 			low_avg, _, _, _, _, profit, low_size, high_size = tmp 
 
-			avg_profit[weapon_name] = (profit, low_avg, low_size, low_size*100/(low_size+high_size), weapon_id)
+			avg_profit[weapon_name] = (profit, low_avg, low_size, high_size, weapon_id)
 
 	with open("avg_profit.json", "w") as file:
 		json.dump(avg_profit, file)
