@@ -11,7 +11,7 @@ import discord
 from discord.ext import commands, tasks
 from os.path import exists
 from auth import Auth
-import margin
+import scripts.margin as margin
 from scripts.get_best_investment import draw
 
 import matplotlib.pyplot as plt
