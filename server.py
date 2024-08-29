@@ -12,7 +12,7 @@ from discord.ext import commands, tasks
 from os.path import exists
 from auth import Auth
 import margin
-from get_best_investment import draw
+from scripts.get_best_investment import draw
 
 import matplotlib.pyplot as plt
 import numpy as np
