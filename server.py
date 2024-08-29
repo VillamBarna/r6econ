@@ -243,7 +243,7 @@ async def on_message(message):
 						item_no = 0
 						for weapon in data_profit:
 							if weapon[1][1] <= max_price and weapon[1][2] > min_data_points and weapon[1][3] > min_data_points and weapon[1][2]*100/(weapon[1][2]+weapon[1][3]) > min_percent:
-								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][3]:.0f}\n" 
+								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][2]*100/(weapon[1][2]+weapon[1][3]):.0f}\n\n" 
 								invest_list.append(weapon[1][4])
 								item_no += 1
 								if ( item_no > 8 ):
@@ -253,7 +253,7 @@ async def on_message(message):
 						await message.channel.send(files=files, embed=embed)
 
 					case _:
-					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ invest <max_price min_percent min_data_points>"
+					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ invest <max_price> <min_percent> <min_data_points>"
 					    embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
 					    await message.channel.send(embed=embed)
 
