@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Function to analyze and split sold values into high and low groups using k-means clustering
 def analyze_sold_values(sold_values):
     if len(sold_values) < 2:
-        return None, None, None, None, [], [], None, None, 0, 0
+        return None, None, [], [], None, None, 0, 0
 
     # Reshape the data for GMM
     sold_values_reshaped = np.array(sold_values).reshape(-1, 1)
@@ -37,13 +37,12 @@ def analyze_sold_values(sold_values):
         avg_difference = (high_avg - low_avg) if low_avg is not None and high_avg is not None else None
         profit = (high_avg * 0.9 - low_avg) if low_avg is not None and high_avg is not None else None
 
-        return low_avg, high_avg, None, None, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
+        return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
 
-    print("Could not find two distinct clusters. Adjust the parameters or check the data.")
-    return None, None, None, None, [], [], None, None, 0, 0
+    
 
 def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
-    low_avg, high_avg, _, _, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size = asv
+    low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size = asv
     
     # Plot the low group points
     low_group_x_time = [current_timestamp[i] for i in low_group_x]

@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import time
-import time
 import json
 import copy
 import contextlib
@@ -13,6 +12,7 @@ from discord.ext import commands, tasks
 from os.path import exists
 from auth import Auth
 import margin
+from get_best_investment import draw
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -228,24 +228,29 @@ async def on_message(message):
 					    e.set_image(url=f'attachment://{item_id}.png')
 					    await message.channel.send(file = file, embed=e)
 
-					case "listprofit":
+					case "invest":
 						with open('avg_profit.json', 'r') as file:
 							data_profit = json.load(file)
 						max_price = float(cmd.pop(0))
+						min_percent = float(cmd.pop(1))
+						min_data_points = float(cmd.pop(2))
 						data_profit = sorted(data_profit.items(), key=lambda x: x[1][0], reverse=True)
 						msg = ""
+						invest_list =[]
 						item_no = 0
 						for weapon in data_profit:
-							if weapon[1][1] <= max_price:
-								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f}\n"
+							if weapon[1][1] <= max_price and weapon[1][2] > min_data_points and weapon[1][3] > min_percent:
+								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][3]:.0f}\n" 
+								invest_list[item_no] = weapon[4]
 								item_no += 1
-								if ( item_no > 49 ):
-									break
+								if ( item_no > 9 ):
+									break		
 						embed=discord.Embed(title='Average profit', description=f'{msg}', color=0xFF5733)
+						draw(invest_list)
 						await message.channel.send(embed=embed)
 
 					case _:
-					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>"
+					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ invest <max_price min_percent min_data_points>"
 					    embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
 					    await message.channel.send(embed=embed)
 
