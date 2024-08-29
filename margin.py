@@ -1,43 +1,46 @@
 import numpy as np
-from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture
 import matplotlib.pyplot as plt
 
 # Function to analyze and split sold values into high and low groups using k-means clustering
 def analyze_sold_values(sold_values):
     if len(sold_values) < 2:
-        return None, None, None, None, [], [], None, None, 0, 0  # Not enough data to calculate statistics
+        return None, None, None, None, [], [], None, None, 0, 0
 
-    # Reshape the data for k-means
+    # Reshape the data for GMM
     sold_values_reshaped = np.array(sold_values).reshape(-1, 1)
     
-    # Apply k-means clustering
-    kmeans = KMeans(n_clusters=2, random_state=0).fit(sold_values_reshaped)
-    labels = kmeans.labels_
-    centers = kmeans.cluster_centers_.flatten()
+    # Apply GMM with more robust settings
+    gmm = GaussianMixture(n_components=2, covariance_type='full', reg_covar=1e-5, random_state=0)
+    labels = gmm.fit_predict(sold_values_reshaped)
     
-    # Separate data into low and high clusters based on cluster centers
-    low_cluster = sold_values_reshaped[labels == np.argmin(centers)]
-    high_cluster = sold_values_reshaped[labels == np.argmax(centers)]
+    # Identify the two clusters
+    unique_labels = set(labels)
     
+    if len(unique_labels) == 2:
+        # Separate data into low and high clusters based on cluster means
+        clusters = [sold_values_reshaped[labels == label] for label in unique_labels]
+        cluster_means = [np.mean(cluster) for cluster in clusters]
 
-    # Determine which data points are in high and low groups based on clusters
-    low_group_x = [i for i, v in enumerate(sold_values) if v in low_cluster]
-    low_group_y = [sold_values[i] for i in low_group_x]
-    
-    high_group_x = [i for i, v in enumerate(sold_values) if v in high_cluster]
-    high_group_y = [sold_values[i] for i in high_group_x]
-    
-    # Calculate averages for low and high groups
-    low_avg = np.mean(low_group_y) if low_group_y else None
-    high_avg = np.mean(high_group_y) if high_group_y else None
-    
-    # Calculate the difference between low and high averages
-    avg_difference = (high_avg - low_avg) if low_avg is not None and high_avg is not None else None
-    
-    # Calculate profit
-    profit = (high_avg * 0.9 - low_avg) if low_avg is not None and high_avg is not None else None
+        low_cluster = clusters[np.argmin(cluster_means)]
+        high_cluster = clusters[np.argmax(cluster_means)]
 
-    return low_avg, high_avg, None, None, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
+        low_group_x = [i for i, v in enumerate(sold_values) if v in low_cluster]
+        low_group_y = [sold_values[i] for i in low_group_x]
+
+        high_group_x = [i for i, v in enumerate(sold_values) if v in high_cluster]
+        high_group_y = [sold_values[i] for i in high_group_x]
+
+        low_avg = np.mean(low_group_y) if low_group_y else None
+        high_avg = np.mean(high_group_y) if high_group_y else None
+
+        avg_difference = (high_avg - low_avg) if low_avg is not None and high_avg is not None else None
+        profit = (high_avg * 0.9 - low_avg) if low_avg is not None and high_avg is not None else None
+
+        return low_avg, high_avg, None, None, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
+
+    print("Could not find two distinct clusters. Adjust the parameters or check the data.")
+    return None, None, None, None, [], [], None, None, 0, 0
 
 def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
     low_avg, high_avg, _, _, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size = asv
