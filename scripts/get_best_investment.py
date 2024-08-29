@@ -29,8 +29,8 @@ with open("avg_profit.json", "w") as file:
 def draw(invest_list):
 	with open('assets/data.json', 'r') as file:
 		data_margin = json.load(file)
-	for i in len(invest_list):
-		item_id = invest_list[i]
+	for id in len(invest_list):
+		item_id = invest_list[id]
 		weapon_info = data_margin[item_id]
 		sold_values = weapon_info.get("sold", [])
 		skin_name = f"{weapon_info.get('name', [])} {weapon_info.get('tags', [None])[0]}"
