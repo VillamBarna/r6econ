@@ -48,6 +48,9 @@ async def on_ready():
 	print("[ Starting market scan daemon ]")
 	scan_market.start()
 	print("[ Started market scan daemon ]")
+	print("[ Starting invest file daemon ]")
+	avg_profit_json.start()
+	print("[ Started invest file daemon ]")
 
 @client.event
 async def on_message(message):
@@ -309,5 +312,27 @@ async def scan_market():
 
 		print("[ FINISHED WRITING TO 'data.json' ]")
 							
+
+@tasks.loop(minutes=60)
+async def avg_profit_json():
+	with open(os.path.join(os.path.dirname(__file__), os.pardir, "assets/data.json"), "r") as file:
+		data = json.load(file)
+
+	avg_profit = dict()
+	for weapon_id, weapon_info in data.items():
+		weapon_name = weapon_info.get("name", "Unknown")
+		first_tag = weapon_info.get("tags", ["Unknown"])[0]  # Get the first tag or "Unknown" if not present
+		weapon_name += f' - {first_tag}'
+		
+		sold_values = weapon_info.get("sold", [])
+		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
+		
+		if len(sold_values_list) > 30:
+			low_avg, _, _, _, _, profit, low_size, high_size = margin.analyze_sold_values(sold_values_list)
+
+			avg_profit[weapon_name] = (profit, low_avg, low_size, low_size*100/(low_size+high_size), weapon_id)
+
+	with open("avg_profit.json", "w") as file:
+		json.dump(avg_profit, file)
 
 client.run(os.getenv("TOKEN"))
