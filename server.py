@@ -246,7 +246,7 @@ async def on_message(message):
 								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][3]:.0f}\n" 
 								invest_list.append(weapon[1][4])
 								item_no += 1
-								if ( item_no > 11 ):
+								if ( item_no > 8 ):
 									break		
 						embed=discord.Embed(title='Average profit', description=f'{msg}', color=0xFF5733)
 						files = draw(invest_list)
