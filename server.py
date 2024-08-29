@@ -249,7 +249,9 @@ async def on_message(message):
 								if ( item_no > 9 ):
 									break		
 						embed=discord.Embed(title='Average profit', description=f'{msg}', color=0xFF5733)
-						draw(invest_list)
+						files = draw(invest_list)
+						for file in files:
+							embed.set_image(url=file.filename)
 						await message.channel.send(embed=embed)
 
 					case _:

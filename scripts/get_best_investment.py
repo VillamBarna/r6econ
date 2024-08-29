@@ -8,6 +8,7 @@ from discord.ext import commands, tasks
 def draw(invest_list):
 	with open('assets/data.json', 'r') as file:
 		data_margin = json.load(file)
+	file = []
 	for id in range(len(invest_list)):
 		item_id = invest_list[id]
 		weapon_info = data_margin[item_id]
@@ -22,6 +23,5 @@ def draw(invest_list):
 
 		asv = margin.analyze_sold_values(sold_values_list)
 		margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
-		file = discord.File(f'graphs/{item_id}.png')
-		e = discord.Embed()
-		e.set_image(url=f'attachment://{item_id}.png')
+		file.append(discord.File(f'graphs/{item_id}.png'))
+	return file
