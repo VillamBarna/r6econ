@@ -270,8 +270,9 @@ async def scan_market():
 		item_id_file = open("assets/ids.json", "r")
 		item_ids = json.loads(item_id_file.read())
 		item_id_file.close()
+		progress = 0
 		for key, item_id in item_ids.items():
-			print(f'[ - [ Scanning {key} ] ]')
+			# print(f'[ - [ Scanning {key} ] ]')
 
 			auth.item_id = item_id
 			res = await auth.try_query_db()
@@ -293,13 +294,15 @@ async def scan_market():
 				}
 			if data[item_id]["data"] == None or data[item_id]["data"] != [res[3], res[4], res[5], res[6], res[7], res[8]]:
 				data[item_id]["data"] = [res[3], res[4], res[5], res[6], res[7], res[8]]
-				print('[ - - NEW PRIMARY DATA ]')
+				# print('[ - - NEW PRIMARY DATA ]')
 			
 			if len(data[item_id]["sold"]) == 0 or data[item_id]["sold"][len(data[item_id]["sold"]) - 1][0] != res[9]:
 				data[item_id]["sold"] = data[item_id]["sold"] + [[res[9], time.time()]]
-				print('[ - - NEW LAST SOLD ]')
+				# print('[ - - NEW LAST SOLD ]')
 
-			print(f'[ ~ [ Done checking {key} ] ]')
+			# print(f'[ ~ [ Done checking {key} ] ]')
+			print(f"{progress/len(item_ids.items())*100:.1f} %", end="\r")
+			progress += 1
 			
 		print("[ Closing Session ]")
 		await auth.close()
