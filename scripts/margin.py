@@ -64,12 +64,12 @@ def analyze_sold_values(sold_values, raw):
         print(f'stargting data number{len(sold_values)}, ending data number {len(low_group_y) + len(high_group_y)}')
     '''
     
-    return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
+    return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y), len(sold_values)
 
     
 
 def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
-    low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size = asv
+    low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size, original_size = asv
     
     # Plot the low group points
     low_group_x_time = [current_timestamp[i] for i in low_group_x]
