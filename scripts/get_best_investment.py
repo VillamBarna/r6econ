@@ -21,7 +21,7 @@ def draw(invest_list):
 			tmp = timestamp_list[i]
 			timestamp_list[i]= -(current_time - tmp) / 3600
 
-		asv = margin.analyze_sold_values(sold_values_list)
+		asv = margin.analyze_sold_values(sold_values_list, False)
 		margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
 		file.append(discord.File(f'graphs/{item_id}.png'))
 	return file

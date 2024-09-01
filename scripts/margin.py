@@ -3,7 +3,7 @@ from sklearn.mixture import GaussianMixture
 import matplotlib.pyplot as plt
 
 # Function to analyze and split sold values into high and low groups using k-means clustering
-def analyze_sold_values(sold_values):
+def analyze_sold_values(sold_values, raw):
     high_threshold=3
     low_threshold = 1.5
     if len(sold_values) < 2:
@@ -46,6 +46,8 @@ def analyze_sold_values(sold_values):
         high_percent = len(high_group_y) * 100 / (len(high_group_y) + len(low_group_y))
         low_percent = len(low_group_y) * 100 / (len(high_group_y) + len(low_group_y))
 
+        if raw:
+            return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
 
         if high_percent < high_threshold:
             # Update sold_values_reshaped to exclude high group data

@@ -213,6 +213,11 @@ async def on_message(message):
 					case "margin":
 					    with open('assets/data.json', 'r') as file:
 						    data_margin = json.load(file)
+						input = cmd.pop(0)
+						if input == "raw":
+							raw = True
+						else: 
+							raw = False
 					    item_id = " ".join(cmd).lower()
 					    weapon_info = data_margin[item_id]
 					    sold_values = weapon_info.get("sold", [])
@@ -224,7 +229,7 @@ async def on_message(message):
 						    tmp = timestamp_list[i]
 						    timestamp_list[i]= -(current_time - tmp) / 3600
 
-					    asv = margin.analyze_sold_values(sold_values_list)
+					    asv = margin.analyze_sold_values(sold_values_list, raw)
 					    margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
 					    file = discord.File(f'graphs/{item_id}.png')
 					    e = discord.Embed()
@@ -331,7 +336,7 @@ async def avg_profit_json():
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 		
 		if len(sold_values_list) > 30:
-			tmp = margin.analyze_sold_values(sold_values_list)
+			tmp = margin.analyze_sold_values(sold_values_list, False)
 			if tmp is None:
 				print(weapon_name)
 				continue
