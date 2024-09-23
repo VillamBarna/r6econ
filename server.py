@@ -285,6 +285,9 @@ async def scan_market():
 				print("Rate Limited in scan_market")
 				continue
 
+			if res == -1:
+				continue
+
 			# Meta: NAME | TYPE | TAGS - Buyers: LOW | HIGH | VOL - Sellers: LOW | HIGH | VOL
 			try:
 				data[item_id]
