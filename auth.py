@@ -356,9 +356,12 @@ class Auth:
     async def try_query_db(self):
         await asyncio.sleep(0.08)
 
-        res = await self.get_db(f"https://public-ubiservices.ubi.com/v1/profiles/me/uplay/graphql")
-
         failed = False
+        try:
+            res = await self.get_db(f"https://public-ubiservices.ubi.com/v1/profiles/me/uplay/graphql")
+        except:
+            failed = True
+
         try:
             res["errors"]
             print(res["errors"])
