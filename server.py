@@ -13,6 +13,7 @@ from os.path import exists
 from auth import Auth
 import scripts.margin as margin
 from scripts.get_best_investment import draw
+from scripts.get_best_investment import filtered_profit
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -211,49 +212,44 @@ async def on_message(message):
 						await message.channel.send(embed=embed)
 
 					case "margin":
-					    with open('assets/data.json', 'r') as file:
-						    data_margin = json.load(file)
+						with open('assets/data.json', 'r') as file:
+							data_margin = json.load(file)
 						input = cmd.pop(0)
 						if input == "raw":
 							raw = True
 						else: 
 							raw = False
-					    item_id = " ".join(cmd).lower()
-					    weapon_info = data_margin[item_id]
-					    sold_values = weapon_info.get("sold", [])
-					    skin_name = f"{weapon_info.get('name', [])} {weapon_info.get('tags', [None])[0]}"
-					    sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
-					    timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
-					    current_time = time.time()
-					    for i in range(len(timestamp_list)):
-						    tmp = timestamp_list[i]
-						    timestamp_list[i]= -(current_time - tmp) / 3600
+						item_id = " ".join(cmd).lower()
+						weapon_info = data_margin[item_id]
+						sold_values = weapon_info.get("sold", [])
+						skin_name = f"{weapon_info.get('name', [])} {weapon_info.get('tags', [None])[0]}"
+						sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
+						timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
+						current_time = time.time()
+						for i in range(len(timestamp_list)):
+							tmp = timestamp_list[i]
+							timestamp_list[i]= -(current_time - tmp) / 3600
 
-					    asv = margin.analyze_sold_values(sold_values_list, raw)
-					    margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
-					    file = discord.File(f'graphs/{item_id}.png')
-					    e = discord.Embed()
-					    e.set_image(url=f'attachment://{item_id}.png')
-					    await message.channel.send(file = file, embed=e)
+						asv = margin.analyze_sold_values(sold_values_list, raw)
+						margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
+						file = discord.File(f'graphs/{item_id}.png')
+						e = discord.Embed()
+						e.set_image(url=f'attachment://{item_id}.png')
+						await message.channel.send(file = file, embed=e)
 
 					case "invest":
 						with open('avg_profit.json', 'r') as file:
 							data_profit = json.load(file)
 						max_price = float(cmd.pop(0))
-						min_percent = float(cmd.pop(0))
-						min_data_points = float(cmd.pop(0))
 						data_profit = sorted(data_profit.items(), key=lambda x: x[1][0], reverse=True)
 						msg = ""
 						invest_list =[]
 						item_no = 0
 						for weapon in data_profit:
-							if weapon[1][1] <= max_price and weapon[1][2] > min_data_points and weapon[1][3] > min_data_points and weapon[1][2]*100/(weapon[1][2]+weapon[1][3]) > min_percent:
-								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f} | Low percentage: {weapon[1][2]*100/(weapon[1][2]+weapon[1][3]):.0f}"
-								if weapon[1][5] != (weapon[1][2]+weapon[1][3]):
-									msg += "The data is filtered\n\n"
-								else:
-									msg += "\n\n"
-								invest_list.append(weapon[1][4])
+							if weapon[1][1] <= max_price:
+								msg += f"{weapon[0]} | Profit: {weapon[1][0]:.0f} | Price: {weapon[1][1]:.0f}\n\n"
+								
+								invest_list.append(weapon[1][3])
 								item_no += 1
 								if ( item_no > 8 ):
 									break		
@@ -262,9 +258,9 @@ async def on_message(message):
 						await message.channel.send(files=files, embed=embed)
 
 					case _:
-					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ margin <\"raw\" (for unfiltered data)> <item id> \n\n\t- econ invest <max_price> <min_percent> <min_data_points>"
-					    embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
-					    await message.channel.send(embed=embed)
+						msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ margin <\"raw\" (for unfiltered data)> <item id> \n\n\t- econ invest <max_price>"
+						embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
+						await message.channel.send(embed=embed)
 
 
 
@@ -340,13 +336,14 @@ async def avg_profit_json():
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 		
 		if len(sold_values_list) > 30:
-			tmp = margin.analyze_sold_values(sold_values_list, False)
+			tmp = filtered_profit(sold_values_list)
 			if tmp is None:
 				print(weapon_name)
 				continue
-			low_avg, _, _, _, _, profit, low_size, high_size, original_size = tmp 
+			low_price, high_price = tmp
+			profit = high_price *0.9 - low_price
 
-			avg_profit[weapon_name] = (profit, low_avg, low_size, high_size, weapon_id, original_size)
+			avg_profit[weapon_name] = (profit, low_price, high_price, weapon_id)
 
 	with open("avg_profit.json", "w") as file:
 		json.dump(avg_profit, file)

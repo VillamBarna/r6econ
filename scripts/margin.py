@@ -66,7 +66,7 @@ def analyze_sold_values(sold_values, raw):
     
     return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y), len(sold_values)
 
-    
+
 
 def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
     low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, low_group_size, high_group_size, original_size = asv
