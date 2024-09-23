@@ -262,7 +262,7 @@ async def on_message(message):
 						await message.channel.send(files=files, embed=embed)
 
 					case _:
-					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ invest <max_price> <min_percent> <min_data_points>"
+					    msg = "The following commands are available:\n\n\t- econ id <item id>\n\n\t- econ graph <# entries (1, 2, ... | all)> <unit (days | hours | minutes)>\n\n\t- econ profit <what you purchased for> <item id>\n\n\t - econ margin <\"raw\" (for unfiltered data)> <item id> \n\n\t- econ invest <max_price> <min_percent> <min_data_points>"
 					    embed=discord.Embed(title=f'Help', description=f'# Ask Barna on GH/DC for help!\n\n# Skins:\n{msg}', color=0xFF5733)
 					    await message.channel.send(embed=embed)
 
