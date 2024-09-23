@@ -47,7 +47,7 @@ def analyze_sold_values(sold_values, raw):
         low_percent = len(low_group_y) * 100 / (len(high_group_y) + len(low_group_y))
 
         if raw:
-            return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y)
+            return low_avg, high_avg, low_group_x, high_group_x, avg_difference, profit, len(low_group_y), len(high_group_y), len(sold_values)
 
         if high_percent < high_threshold:
             # Update sold_values_reshaped to exclude high group data
