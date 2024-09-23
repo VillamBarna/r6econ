@@ -1,5 +1,5 @@
 # Open the file with URLs
-with open('raw_urls.txt', 'r') as file:
+with open('update_ids/raw_urls.txt', 'r') as file:
     lines = file.readlines()
 
 # Set to store unique item IDs (set automatically handles duplicates)
@@ -19,7 +19,7 @@ for line in lines:
 unique_item_ids = sorted(list(unique_item_ids))
 
 # Write the unique item IDs to a new file
-with open('unique_item_ids.txt', 'w') as output_file:
+with open('update_ids/unique_item_ids.txt', 'w') as output_file:
     for item_id in unique_item_ids:
         output_file.write(item_id + '\n')
 
