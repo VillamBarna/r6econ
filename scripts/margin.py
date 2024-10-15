@@ -87,14 +87,17 @@ def analyze_sold_values(sold_values, raw):
         high_group_x = [i for i, v in enumerate(sold_values_np) if v >= high_percentile_value]
 
 
-        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value
+        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index
 
 
 
 
 def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
-    low_group_x, net_group_x, high_group_x, low_percentile, high_percentile = asv
+    low_group_x, net_group_x, high_group_x, low_percentile, high_percentile, last_stable_index = asv
     
+    sold_values= sold_values[last_stable_index:]
+    current_timestamp = current_timestamp[last_stable_index:]
+
     # Plot the low group points
     low_group_x_time = [current_timestamp[i] for i in low_group_x]
     plt.scatter(low_group_x_time, [sold_values[i] for i in low_group_x], color='r')
