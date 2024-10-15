@@ -24,12 +24,14 @@ def analyze_sold_values(sold_values, raw):
         # Above 90th percentile
         high_group_x = [i for i, v in enumerate(sold_values_np) if v >= high_percentile_value]
 
-        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value
+        last_stable_index = len(sold_values)
+
+        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index
 
     else:
 
         fluctuation_threshold=0.2
-        window_size=30
+        window_size=15
         # Calculate Z-scores to filter out outliers
         z_scores = zscore(sold_values_np)
     
@@ -43,19 +45,19 @@ def analyze_sold_values(sold_values, raw):
             return None  # Return None if all values are outliers
 
         
-        start_index = len(filtered_values) - window_size
+        start_index = len(filtered_values) - window_size*2
         current_window = filtered_values[start_index:]
         low_percentile_value = np.percentile(current_window, 10)
         high_percentile_value = np.percentile(current_window, 90)
 
         last_stable_index = start_index  # Initialize with the last window index
         
-        count = 2
+        count = 1
 
 
         # Step 1: Start from the last window and calculate initial percentiles
         while(True and (count*window_size)<len(filtered_values)):
-            start_index = len(filtered_values) - count*window_size
+            start_index = len(filtered_values) - (2+count)*window_size
             current_window = filtered_values[start_index:]
             new_low_percentile_value = np.percentile(current_window, 10)
             new_high_percentile_value = np.percentile(current_window, 90)
@@ -76,6 +78,9 @@ def analyze_sold_values(sold_values, raw):
         stable_window = filtered_values[last_stable_index:]
 
         sold_values_np = np.array(stable_window)
+
+        low_percentile_value = np.percentile(sold_values_np, 10)
+        high_percentile_value = np.percentile(sold_values_np, 90)
 
         # Below 10th percentile
         low_group_x = [i for i, v in enumerate(sold_values_np) if v <= low_percentile_value]
@@ -111,11 +116,12 @@ def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
     plt.scatter(high_group_x_time, [sold_values[i] for i in high_group_x], color='g')
     
     # Plot the low and high average lines
-    if low_percentile is not None:
-        plt.axhline(y=low_percentile, color='r', linestyle='--', label=f'Low: {low_percentile:.2f}')
     
     if high_percentile is not None:
         plt.axhline(y=high_percentile, color='g', linestyle='--', label=f'High: {high_percentile:.2f}')
+
+    if low_percentile is not None:
+        plt.axhline(y=low_percentile, color='r', linestyle='--', label=f'Low: {low_percentile:.2f}')
     
     plt.xlabel('Time ago [hours]')
     plt.ylabel('Sold Value')

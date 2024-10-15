@@ -339,11 +339,11 @@ async def avg_profit_json():
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float)) and value[1] > 1727107238]  # Filter out non-numeric values
 		
 		if len(sold_values_list) > 30:
-			tmp = filtered_profit(sold_values_list)
+			tmp = margin.analyze_sold_values(sold_values_list,False)
 			if tmp is None:
 				print(weapon_name)
 				continue
-			low_price, high_price = tmp
+			low_group_x, net_group_x, high_group_x, low_price, high_price, last_stable_index = tmp
 			profit = high_price *0.9 - low_price
 
 			avg_profit[weapon_name] = (profit, low_price, high_price, weapon_id)
