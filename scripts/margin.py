@@ -24,14 +24,14 @@ def analyze_sold_values(sold_values, raw):
         # Above 90th percentile
         high_group_x = [i for i, v in enumerate(sold_values_np) if v >= high_percentile_value]
 
-        last_stable_index = len(sold_values)
+        last_stable_index = 0
 
         return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index
 
     else:
 
         fluctuation_threshold=0.2
-        window_size=15
+        window_size=20
         # Calculate Z-scores to filter out outliers
         z_scores = zscore(sold_values_np)
     
