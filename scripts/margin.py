@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.mixture import GaussianMixture
 import matplotlib.pyplot as plt
 from scipy.stats import zscore
+import sys
 
 def analyze_sold_values(sold_values, raw):
     if len(sold_values) < 2:
@@ -129,6 +130,7 @@ def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
     low_group_x, net_group_x, high_group_x, low_percentile, high_percentile, last_stable_index, removed_indices= asv
     
     print("Plot start")
+    sys.stdout.flush()
 
     filtered_sold_values = [sv for i, sv in enumerate(sold_values) if i not in removed_indices]
     
