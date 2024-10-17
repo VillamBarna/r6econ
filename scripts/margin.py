@@ -34,7 +34,7 @@ def analyze_sold_values(sold_values, raw):
 
     else:
 
-        fluctuation_threshold=0.07
+        fluctuation_threshold=0.08
         window_size=30
 
         if(window_size/(window_size+len(sold_values_np)) <0.1 ):
@@ -132,7 +132,7 @@ def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
 
     filtered_sold_values = [sv for i, sv in enumerate(sold_values) if i not in removed_indices]
     
-    sold_values= filtered_sold_values[last_stable_index:]
+    current_sold_values= filtered_sold_values[last_stable_index:]
 
     filtered_timestamp = [ts for i, ts in enumerate(weapon_timestamp) if i not in removed_indices]
 
@@ -144,15 +144,15 @@ def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
 
     # Plot the low group points
     low_group_x_time = [current_timestamp[i] for i in low_group_x]
-    plt.scatter(low_group_x_time, [sold_values[i] for i in low_group_x], color='r')
+    plt.scatter(low_group_x_time, [current_sold_values[i] for i in low_group_x], color='r')
 
     # Plot the neutral group points
     net_group_x_time = [current_timestamp[i] for i in net_group_x]
-    plt.scatter(net_group_x_time, [sold_values[i] for i in net_group_x], color='gray')
+    plt.scatter(net_group_x_time, [current_sold_values[i] for i in net_group_x], color='gray')
 
     # Plot the high group points
     high_group_x_time = [current_timestamp[i] for i in high_group_x]
-    plt.scatter(high_group_x_time, [sold_values[i] for i in high_group_x], color='g')
+    plt.scatter(high_group_x_time, [current_sold_values[i] for i in high_group_x], color='g')
     
     # Plot the low and high average lines
     
