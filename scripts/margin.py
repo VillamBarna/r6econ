@@ -126,21 +126,15 @@ def analyze_sold_values(sold_values, raw):
 def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
     low_group_x, net_group_x, high_group_x, low_percentile, high_percentile, last_stable_index, removed_indices= asv
     
-    if len(removed_indices) !=0:
-        print("removed_indices is not empty")
-        
-        filtered_sold_values = [sv for i, sv in enumerate(sold_values) if i not in removed_indices]
+      
+    filtered_sold_values = [sv for i, sv in enumerate(sold_values) if i not in removed_indices]
     
-        sold_values= filtered_sold_values[last_stable_index:]
+    sold_values= filtered_sold_values[last_stable_index:]
 
-        filtered_timestamp = [ts for i, ts in enumerate(weapon_timestamp) if i not in removed_indices]
+    filtered_timestamp = [ts for i, ts in enumerate(weapon_timestamp) if i not in removed_indices]
 
-        current_timestamp = filtered_timestamp[last_stable_index:]
+    current_timestamp = filtered_timestamp[last_stable_index:]
 
-    else:
-        print("removed_indices is empty")
-        sold_values= filtered_sold_values[last_stable_index:]
-        current_timestamp = weapon_timestamp[last_stable_index:]
 
 
 
