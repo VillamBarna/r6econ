@@ -10,6 +10,8 @@ def analyze_sold_values(sold_values, raw):
     # Convert to numpy array for easy calculation
     sold_values_np = np.array(sold_values)
 
+    print("Analyze start")
+
     if raw:
         # Calculate the 10th and 90th percentiles for raw data
         low_percentile_value = np.percentile(sold_values_np, 10)
