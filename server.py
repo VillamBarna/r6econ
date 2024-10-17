@@ -343,7 +343,7 @@ async def avg_profit_json():
 			if tmp is None:
 				print(weapon_name)
 				continue
-			low_group_x, net_group_x, high_group_x, low_price, high_price, last_stable_index = tmp
+			low_group_x, net_group_x, high_group_x, low_price, high_price, last_stable_index, removed_indices = tmp
 			profit = high_price *0.9 - low_price
 
 			if len(low_group_x)+len(net_group_x)+len(high_group_x) > 30:

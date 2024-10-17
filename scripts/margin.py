@@ -26,17 +26,26 @@ def analyze_sold_values(sold_values, raw):
 
         last_stable_index = 0
 
-        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index
+
+        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index, None
 
     else:
 
-        fluctuation_threshold=0.2
-        window_size=20
+        fluctuation_threshold=0.05
+        window_size=30
+
+        if(window_size/(window_size+len(sold_values_np)) <0.1 ):
+            window_size = int(len(sold_values_np)/15+1)
+
+
         # Calculate Z-scores to filter out outliers
         z_scores = zscore(sold_values_np)
     
         # Set threshold for identifying outliers (±2 standard deviation commonly used)
         threshold_z = 2
+
+        # Find indices of outliers
+        removed_indices = [i for i, z in enumerate(z_scores) if z <= -threshold_z or z >= threshold_z]
     
         # Remove outliers by keeping values within the threshold
         filtered_values = sold_values_np[(z_scores > -threshold_z) & (z_scores < threshold_z)]
@@ -45,29 +54,45 @@ def analyze_sold_values(sold_values, raw):
             return None  # Return None if all values are outliers
 
         
-        start_index = len(filtered_values) - window_size*2
-        current_window = filtered_values[start_index:]
-        low_percentile_value = np.percentile(current_window, 10)
-        high_percentile_value = np.percentile(current_window, 90)
+        if len(filtered_values) >window_size*2:
+            start_index = len(filtered_values) - window_size*2
+            current_window = filtered_values[start_index:(start_index+window_size)]
+            low_percentile_value = np.percentile(current_window, 10)
+            high_percentile_value = np.percentile(current_window, 90)
 
-        last_stable_index = start_index  # Initialize with the last window index
+            last_stable_index = start_index  # Initialize with the last window index
         
-        count = 1
+            count = 1
+        else:
+            return None
 
 
         # Step 1: Start from the last window and calculate initial percentiles
         while(True and (count*window_size)<len(filtered_values)):
-            start_index = len(filtered_values) - (2+count)*window_size
-            current_window = filtered_values[start_index:]
-            new_low_percentile_value = np.percentile(current_window, 10)
-            new_high_percentile_value = np.percentile(current_window, 90)
+            if((count+2)*window_size>len(filtered_values)):
+                start_index = 0
+                current_window = filtered_values[start_index:(start_index+window_size)]
+                new_low_percentile_value = np.percentile(current_window, 10)
+                new_high_percentile_value = np.percentile(current_window, 90)
+                if(abs(new_low_percentile_value - low_percentile_value) <= fluctuation_threshold * low_percentile_value and abs(new_high_percentile_value - high_percentile_value) <= fluctuation_threshold * high_percentile_value):
+                    last_stable_index = start_index
+                    break
+                else:
+                    break
+
+            else:
+                start_index = len(filtered_values) - (2+count)*window_size
+                current_window = filtered_values[start_index:(start_index+window_size)]
+                new_low_percentile_value = np.percentile(current_window, 10)
+                new_high_percentile_value = np.percentile(current_window, 90)
 
             
             if(abs(new_low_percentile_value - low_percentile_value) <= fluctuation_threshold * low_percentile_value and abs(new_high_percentile_value - high_percentile_value) <= fluctuation_threshold * high_percentile_value ):
                 last_stable_index = start_index  # Append the window
                 count +=1
-                low_percentile_value = new_low_percentile_value
-                high_percentile_value = new_high_percentile_value
+                stable_data = filtered_values[start_index:]
+                low_percentile_value = np.percentile(stable_data, 10)
+                high_percentile_value = np.percentile(stable_data, 90)
                 continue
             else:
                 break
@@ -92,16 +117,28 @@ def analyze_sold_values(sold_values, raw):
         high_group_x = [i for i, v in enumerate(sold_values_np) if v >= high_percentile_value]
 
 
-        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index
+        return low_group_x, net_group_x, high_group_x, low_percentile_value, high_percentile_value, last_stable_index, removed_indices
 
 
 
 
-def plot_weapon_sales(sold_values, current_timestamp, asv, item_id, item_name):
-    low_group_x, net_group_x, high_group_x, low_percentile, high_percentile, last_stable_index = asv
+def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
+    low_group_x, net_group_x, high_group_x, low_percentile, high_percentile, last_stable_index, removed_indices= asv
     
-    sold_values= sold_values[last_stable_index:]
-    current_timestamp = current_timestamp[last_stable_index:]
+    if removed_indices is not None:
+        filtered_sold_values = [sv for i, sv in enumerate(sold_values) if i not in removed_indices]
+    
+        sold_values= filtered_sold_values[last_stable_index:]
+
+        filtered_timestamp = [ts for i, ts in enumerate(weapon_timestamp) if i not in removed_indices]
+
+        current_timestamp = filtered_timestamp[last_stable_index:]
+
+    else:
+        sold_values= filtered_sold_values[last_stable_index:]
+        current_timestamp = weapon_timestamp[last_stable_index:]
+
+
 
     # Plot the low group points
     low_group_x_time = [current_timestamp[i] for i in low_group_x]
