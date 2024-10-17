@@ -137,6 +137,7 @@ def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
         current_timestamp = filtered_timestamp[last_stable_index:]
 
     else:
+        print("removed_indices is None")
         sold_values= filtered_sold_values[last_stable_index:]
         current_timestamp = weapon_timestamp[last_stable_index:]
 
