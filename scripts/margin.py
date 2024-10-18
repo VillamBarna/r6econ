@@ -38,8 +38,6 @@ def analyze_sold_values(sold_values, raw):
         fluctuation_threshold=0.08
         window_size=30
 
-        if(window_size/(window_size+len(sold_values_np)) <0.1 ):
-            window_size = int(len(sold_values_np)/15+1)
 
 
         # Calculate Z-scores to filter out outliers
@@ -53,6 +51,9 @@ def analyze_sold_values(sold_values, raw):
     
         # Remove outliers by keeping values within the threshold
         filtered_values = sold_values_np[(z_scores > -threshold_z) & (z_scores < threshold_z)]
+
+        if(window_size/(window_size+len(filtered_values)) <0.1 ):
+            window_size = int(len(filtered_values)/15+1)
 
         if len(filtered_values) == 0:
             return None  # Return None if all values are outliers
