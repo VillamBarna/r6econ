@@ -341,7 +341,7 @@ async def avg_profit_json():
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 		timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
 		tracking_start_time = timestamp_list[0]
-
+		current_time = time.time()
 
 		if len(sold_values_list) > 30:
 			tmp = margin.analyze_sold_values(sold_values_list,tracking_start_time, False)
@@ -351,7 +351,7 @@ async def avg_profit_json():
 			low_group_x, net_group_x, high_group_x, low_price, high_price, last_stable_index, removed_indices = tmp
 			profit = high_price *0.9 - low_price
 
-			if len(low_group_x)+len(net_group_x)+len(high_group_x) > 30:
+			if len(low_group_x)+len(net_group_x)+len(high_group_x) > 4*(len(sold_values_list)-len(removed_indices))/((current_time - tracking_start_time)/86400):
 				avg_profit[weapon_name] = (profit, low_price, high_price, weapon_id)
 
 	with open("avg_profit.json", "w") as file:
