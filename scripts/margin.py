@@ -55,6 +55,7 @@ def analyze_sold_values(sold_values,tracking_start_time, raw):
         fluctuation_threshold=0.08
         window_size=len(filtered_values)/(3*(current_time - tracking_start_time)*86400)
         
+        window_size = int(window_size)
 
         if len(filtered_values) == 0:
             return None  # Return None if all values are outliers
