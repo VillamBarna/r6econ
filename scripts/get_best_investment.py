@@ -18,12 +18,13 @@ def draw(invest_list):
 		skin_name = f"{weapon_info.get('name', [])} {weapon_info.get('tags', [None])[0]}"
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 		timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
+		tracking_start_time = timestamp_list[0]
 		current_time = time.time()
 		for i in range(len(timestamp_list)):
 			tmp = timestamp_list[i]
 			timestamp_list[i]= -(current_time - tmp) / 3600
 
-		asv = margin.analyze_sold_values(sold_values_list, False)
+		asv = margin.analyze_sold_values(sold_values_list, tracking_start_time, False)
 		margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
 		file.append(discord.File(f'graphs/{item_id}.png'))
 	return file

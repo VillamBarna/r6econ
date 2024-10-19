@@ -2,9 +2,10 @@ import numpy as np
 from sklearn.mixture import GaussianMixture
 import matplotlib.pyplot as plt
 from scipy.stats import zscore
-import sys
+import time
 
-def analyze_sold_values(sold_values, raw):
+
+def analyze_sold_values(sold_values,tracking_start_time, raw):
     if len(sold_values) < 2:
         return None
 
@@ -34,8 +35,6 @@ def analyze_sold_values(sold_values, raw):
 
     else:
 
-        fluctuation_threshold=0.05
-        window_size=20
 
 
 
@@ -51,8 +50,11 @@ def analyze_sold_values(sold_values, raw):
         # Remove outliers by keeping values within the threshold
         filtered_values = sold_values_np[(z_scores > -threshold_z) & (z_scores < threshold_z)]
 
-        if(window_size/(window_size+len(filtered_values)) <0.1 ):
-            window_size = int(len(filtered_values)/15+1)
+        current_time =time.time()
+
+        fluctuation_threshold=0.08
+        window_size=len(filtered_values)/(3*(current_time - tracking_start_time)*86400)
+        
 
         if len(filtered_values) == 0:
             return None  # Return None if all values are outliers

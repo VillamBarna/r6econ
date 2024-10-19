@@ -226,12 +226,13 @@ async def on_message(message):
 						#hard limiter value[1]>1727107238
 						sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 						timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
+						tracking_start_time = timestamp_list[0]
 						current_time = time.time()
 						for i in range(len(timestamp_list)):
 							tmp = timestamp_list[i]
 							timestamp_list[i]= -(current_time - tmp) / 3600
 
-						asv = margin.analyze_sold_values(sold_values_list, raw)
+						asv = margin.analyze_sold_values(sold_values_list, tracking_start_time, raw)
 						margin.plot_weapon_sales(sold_values_list, timestamp_list, asv, item_id, skin_name)
 						file = discord.File(f'graphs/{item_id}.png')
 						e = discord.Embed()
@@ -338,9 +339,12 @@ async def avg_profit_json():
 		
 		sold_values = weapon_info.get("sold", [])
 		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
-		
+		timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
+		tracking_start_time = timestamp_list[0]
+
+
 		if len(sold_values_list) > 30:
-			tmp = margin.analyze_sold_values(sold_values_list,False)
+			tmp = margin.analyze_sold_values(sold_values_list,tracking_start_time, False)
 			if tmp is None:
 				print(weapon_name)
 				continue
