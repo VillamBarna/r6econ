@@ -223,8 +223,9 @@ async def on_message(message):
 						weapon_info = data_margin[item_id]
 						sold_values = weapon_info.get("sold", [])
 						skin_name = f"{weapon_info.get('name', [])} {weapon_info.get('tags', [None])[0]}"
-						sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float)) and value[1]>1727107238]  # Filter out non-numeric values
-						timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float)) and value[1]>1727107238]
+						#hard limiter value[1]>1727107238
+						sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
+						timestamp_list = [value[1] for value in sold_values if isinstance(value[0], (int, float))]
 						current_time = time.time()
 						for i in range(len(timestamp_list)):
 							tmp = timestamp_list[i]
@@ -336,7 +337,7 @@ async def avg_profit_json():
 		weapon_name += f' - {first_tag}'
 		
 		sold_values = weapon_info.get("sold", [])
-		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float)) and value[1] > 1727107238]  # Filter out non-numeric values
+		sold_values_list = [value[0] for value in sold_values if isinstance(value[0], (int, float))]  # Filter out non-numeric values
 		
 		if len(sold_values_list) > 30:
 			tmp = margin.analyze_sold_values(sold_values_list,False)
