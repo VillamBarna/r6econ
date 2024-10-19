@@ -350,8 +350,9 @@ async def avg_profit_json():
 				continue
 			low_group_x, net_group_x, high_group_x, low_price, high_price, last_stable_index, removed_indices = tmp
 			profit = high_price *0.9 - low_price
+			stable_window_start_time = timestamp_list[last_stable_index]
 
-			if len(low_group_x)+len(net_group_x)+len(high_group_x) > 4*(len(sold_values_list)-len(removed_indices))/((current_time - tracking_start_time)/86400):
+			if (len(low_group_x)+len(net_group_x)+len(high_group_x))/((current_time - stable_window_start_time)/86400)  > 3:
 				avg_profit[weapon_name] = (profit, low_price, high_price, weapon_id)
 
 	with open("avg_profit.json", "w") as file:
