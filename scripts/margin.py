@@ -11,7 +11,6 @@ def analyze_sold_values(sold_values, raw):
     # Convert to numpy array for easy calculation
     sold_values_np = np.array(sold_values)
 
-    print("Analyze start")
 
     if raw:
         # Calculate the 10th and 90th percentiles for raw data
@@ -35,8 +34,8 @@ def analyze_sold_values(sold_values, raw):
 
     else:
 
-        fluctuation_threshold=0.08
-        window_size=30
+        fluctuation_threshold=0.05
+        window_size=20
 
 
 
@@ -129,9 +128,8 @@ def analyze_sold_values(sold_values, raw):
 
 def plot_weapon_sales(sold_values, weapon_timestamp, asv, item_id, item_name):
     low_group_x, net_group_x, high_group_x, low_percentile, high_percentile, last_stable_index, removed_indices= asv
-    
-    print("Plot start")
-    sys.stdout.flush()
+ 
+
 
     filtered_sold_values = [sv for i, sv in enumerate(sold_values) if i not in removed_indices]
     
