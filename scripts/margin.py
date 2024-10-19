@@ -58,6 +58,8 @@ def analyze_sold_values(sold_values,tracking_start_time, raw):
         window_size = int(window_size)
 
         print(window_size)
+        print(current_time)
+        print(tracking_start_time)
 
         if len(filtered_values) == 0:
             return None  # Return None if all values are outliers
