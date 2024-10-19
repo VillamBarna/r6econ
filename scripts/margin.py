@@ -55,7 +55,7 @@ def analyze_sold_values(sold_values,tracking_start_time, raw):
         
         current_time =time.time()
 
-        fluctuation_threshold=0.08
+        fluctuation_threshold=0.1
         window_size=len(filtered_values)/(5*(current_time - tracking_start_time)/86400)
         
         if(window_size<1):
